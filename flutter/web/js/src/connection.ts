@@ -753,10 +753,9 @@ function getrUriFromRs(
 ): string {
   if (uri.indexOf(":") > 0) {
     const tmp = uri.split(":");
-    const port = parseInt(tmp[1]);
-    uri = tmp[0] + ":" + (port + (isRelay ? roffset || 3 : 2));
+    uri = tmp[0] + ":" + (isRelay ? 21119 : 21118);
   } else {
-    uri += ":" + (PORT + (isRelay ? 3 : 2));
+    uri += ":" + (isRelay ? 21119 : 21118);
   }
   return SCHEMA + uri;
 }

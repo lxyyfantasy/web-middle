@@ -631,7 +631,7 @@ fn get_direct_port() -> i32 {
         .parse::<i32>()
         .unwrap_or(0);
     if port <= 0 {
-        port = RENDEZVOUS_PORT + 2;
+        port = 21118;
     }
     port
 }
@@ -750,7 +750,7 @@ async fn create_online_stream() -> ResultType<FramedStream> {
     if port == 0 {
         bail!("Invalid server address: {}", rendezvous_server);
     }
-    let online_server = format!("{}:{}", tmp[0], port - 1);
+    let online_server = format!("{}:{}", 21115);
     connect_tcp(online_server, CONNECT_TIMEOUT).await
 }
 

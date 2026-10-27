@@ -258,7 +258,7 @@ impl Client {
         // to-do: remember the port for each peer, so that we can retry easier
         if hbb_common::is_ip_str(peer) {
             return Ok((
-                socket_client::connect_tcp(check_port(peer, RELAY_PORT + 1), CONNECT_TIMEOUT)
+                socket_client::connect_tcp(check_port(peer, 21118), CONNECT_TIMEOUT)
                     .await?,
                 true,
                 None,
