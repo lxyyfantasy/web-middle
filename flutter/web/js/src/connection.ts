@@ -6,7 +6,6 @@ import * as sha256 from "fast-sha256";
 import * as globals from "./globals";
 import { decompress, mapKey, sleep } from "./common";
 
-const PORT = 21116;
 const HOSTS = [
   "rs-sg.rustdesk.com",
   "rs-cn.rustdesk.com",
@@ -748,8 +747,7 @@ function getDefaultUri(isRelay: Boolean = false): string {
 
 function getrUriFromRs(
   uri: string,
-  isRelay: Boolean = false,
-  roffset: number = 0
+  isRelay: Boolean = false
 ): string {
   if (uri.indexOf(":") > 0) {
     const tmp = uri.split(":");
