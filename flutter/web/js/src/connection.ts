@@ -134,7 +134,7 @@ export default class Connection {
     const pk = rr.pk;
     let uri = rr.relay_server;
     if (uri) {
-      uri = getrUriFromRs(uri, true, 2);
+      uri = getrUriFromRs(uri, true);
     } else {
       uri = getDefaultUri(true);
     }
