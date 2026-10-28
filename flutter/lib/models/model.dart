@@ -2453,6 +2453,19 @@ class FFI {
       cursorModel.peerId = id;
     }
 
+    // ★★★ 加这一段：Web 分支提前，不调 sessionAddSync / sessionStart
+    if (isWeb) {
+      platformFFI.setRgbaCallback((int display, Uint8List data) {
+        onEvent2UIRgba();
+        imageModel.onRgba(display, data);
+      });
+      final cb = ffiModel.startEventListener(sessionId, id);
+      platformFFI.setEventCallback(cb);
+      this.id = id;
+      return;
+    }
+    // ★★★ 加到这里结束
+    
     final isNewPeer = tabWindowId == null;
     // If tabWindowId != null, this session is a "tab -> window" one.
     // Else this session is a new one.
@@ -2499,14 +2512,6 @@ class FFI {
       // and then the displays' capturing requests can be sent.
       stream = bind.sessionStartWithDisplays(
           sessionId: sessionId, id: id, displays: Int32List.fromList(displays));
-    }
-
-    if (isWeb) {
-      platformFFI.setRgbaCallback((int display, Uint8List data) {
-        onEvent2UIRgba();
-        imageModel.onRgba(display, data);
-      });
-      return;
     }
 
     final cb = ffiModel.startEventListener(sessionId, id);

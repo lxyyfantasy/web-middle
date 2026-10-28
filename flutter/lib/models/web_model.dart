@@ -35,7 +35,7 @@ class PlatformFFI {
   RustdeskImpl get ffiBind => _ffiBind;
 
   static Future<String> getVersion() async {
-    throw UnimplementedError();
+    return getByName('version');  // 或直接 return '1.3.x' 之类，按你实际版本
   }
 
   bool registerEventHandler(
@@ -83,7 +83,8 @@ class PlatformFFI {
       _ffiBind.translate(name: name, locale: locale);
 
   Uint8List? getRgba(SessionID sessionId, int display, int bufSize) {
-    throw UnimplementedError();
+    // Web 平台走 setRgbaCallback 路径，不走这里；返回 null 避免 UnimplementedError 打断
+    return null;
   }
 
   int getRgbaSize(SessionID sessionId, int display) =>
