@@ -167,7 +167,7 @@ class ServerModel with ChangeNotifier {
       updatePasswordModel();
     }
 
-    if (!isTest) {
+    if (!isTest && !isWeb) {
       Future.delayed(Duration.zero, () async {
         if (await bind.optionSynced()) {
           await timerCallback();

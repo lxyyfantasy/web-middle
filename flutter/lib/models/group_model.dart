@@ -26,6 +26,7 @@ class GroupModel {
   GroupModel(this.parent);
 
   Future<void> pull({force = true, quiet = false}) async {
+    if (isWeb) return;   // ← 加这行，在方法第一行
     if (bind.isDisableGroupPanel()) return;
     if (!gFFI.userModel.isLogin || groupLoading.value) return;
     if (!force && initialized) return;
@@ -227,6 +228,7 @@ class GroupModel {
   }
 
   Future<void> loadCache() async {
+    if (isWeb) return;   // ← 加这行
     try {
       if (_cacheLoadOnceFlag || groupLoading.value || initialized) return;
       _cacheLoadOnceFlag = true;
@@ -254,6 +256,7 @@ class GroupModel {
   }
 
   reset() async {
+    if (isWeb) return;   // ← 加这行
     groupLoadError.value = '';
     users.clear();
     peers.clear();
