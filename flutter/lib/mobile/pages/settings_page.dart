@@ -713,8 +713,20 @@ class _SettingsState extends State<SettingsPage> with WidgetsBindingObserver {
 }
 
 void showServerSettings(OverlayDialogManager dialogManager) async {
-  Map<String, dynamic> options = jsonDecode(await bind.mainGetOptions());
-  showServerSettingsWithValue(ServerConfig.fromOptions(options), dialogManager);
+  ServerConfig serverConfig;
+  try {
+    final raw = await bind.mainGetOptions();
+    if (raw.isEmpty || raw == 'null') {
+      serverConfig = ServerConfig(idServer: '', relayServer: '', apiServer: '', key: '');
+    } else {
+      final options = jsonDecode(raw) as Map<String, dynamic>;
+      serverConfig = ServerConfig.fromOptions(options);
+    }
+  } catch (e) {
+    debugPrint('showServerSettings failed: $e');
+    serverConfig = ServerConfig(idServer: '', relayServer: '', apiServer: '', key: '');
+  }
+  showServerSettingsWithValue(serverConfig, dialogManager);
 }
 
 void showLanguageSettings(OverlayDialogManager dialogManager) async {

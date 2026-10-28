@@ -226,7 +226,7 @@ class RustdeskImpl {
   }
 
   String getLocalKbLayoutType({dynamic hint}) {
-    throw js.context.callMethod('getByName', ['option:local', 'kb_layout']);
+      return js.context.callMethod('getByName', ['option:local', 'kb_layout']) ?? '';
   }
 
   Future<void> setLocalKbLayoutType(
@@ -446,7 +446,7 @@ class RustdeskImpl {
       required String name,
       required String value,
       dynamic hint}) {
-    return Future(() => js.context.callMethod('SetByName', [
+    return Future(() => js.context.callMethod('setByName', [
           'option:session',
           jsonEncode({'name': name, 'value': value})
         ]));
@@ -673,11 +673,17 @@ class RustdeskImpl {
 
   // get server settings
   String mainGetOptionsSync({dynamic hint}) {
-    return js.context.callMethod('getByName', ['options']);
+    final v = js.context.callMethod('getByName', ['options']);
+    if (v != null && v.isNotEmpty && v != 'null') return v;
+    final ls = js.context['localStorage'];
+    final stored = ls.callMethod('getItem', ['options']);
+    return (stored == null || stored.isEmpty) ? '{}' : stored;
   }
 
   Future<void> mainSetOptions({required String json, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', ['options', json]));
+    final ls = js.context['localStorage'];
+    ls.callMethod('setItem', ['options', json]);
+    return Future.value();
   }
 
   Future<String> mainTestIfValidServer(

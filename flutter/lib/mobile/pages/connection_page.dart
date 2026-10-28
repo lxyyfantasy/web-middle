@@ -203,19 +203,20 @@ class _ConnectionPageState extends State<ConnectionPage> {
                         TextEditingController fieldTextEditingController,
                         FocusNode fieldFocusNode,
                         VoidCallback onFieldSubmitted) {
-                      fieldTextEditingController.text = _idController.text;
+                      if (fieldTextEditingController.text != _idController.text) {
+                        fieldTextEditingController.text = _idController.text;
+                      }
                       fieldFocusNode.addListener(() async {
-                        _idEmpty.value =
-                            fieldTextEditingController.text.isEmpty;
+                        _idEmpty.value = fieldTextEditingController.text.isEmpty;
                         if (fieldFocusNode.hasFocus && !isPeersLoading) {
                           _fetchPeers();
                         }
                       });
-                      final textLength =
-                          fieldTextEditingController.value.text.length;
-                      // select all to facilitate removing text, just following the behavior of address input of chrome
-                      fieldTextEditingController.selection = TextSelection(
-                          baseOffset: 0, extentOffset: textLength);
+                      if (!isWeb) {
+                        final textLength = fieldTextEditingController.value.text.length;
+                        fieldTextEditingController.selection = TextSelection(
+                            baseOffset: 0, extentOffset: textLength);
+                      }
                       return AutoSizeTextField(
                         controller: fieldTextEditingController,
                         focusNode: fieldFocusNode,

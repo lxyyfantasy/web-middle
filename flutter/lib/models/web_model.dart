@@ -55,6 +55,9 @@ class PlatformFFI {
     }
   }
 
+  void Function(Map<String, dynamic>)? _onGlobalEventCb;
+  void Function(int, Uint8List)? _onRgbaCb;
+
   void unregisterEventHandler(String eventName, String handlerName) {
     debugPrint('unregisterEventHandler $eventName $handlerName');
     var handlers = _eventHandlers[eventName];
@@ -104,7 +107,7 @@ class PlatformFFI {
     window.onContextMenu.listen((event) {
       event.preventDefault();
     });
-
+  
     context['onRegisteredEvent'] = (String message) {
       try {
         Map<String, dynamic> event = json.decode(message);
@@ -113,25 +116,31 @@ class PlatformFFI {
         print('json.decode fail(): $e');
       }
     };
+  
+    context['onGlobalEvent'] = (String message) {
+      try {
+        Map<String, dynamic> event = json.decode(message);
+        tryHandle(event);
+        _onGlobalEventCb?.call(event);
+      } catch (e) {
+        print('onGlobalEvent fail: $e');
+      }
+    };
+  
+    // ★ 补这一段
+    context['onRgba'] = (int display, Uint8List? rgba) {
+      if (rgba != null) {
+        _onRgbaCb?.call(display, rgba);
+      }
+    };
   }
 
   void setEventCallback(void Function(Map<String, dynamic>) fun) {
-    context["onGlobalEvent"] = (String message) {
-      try {
-        Map<String, dynamic> event = json.decode(message);
-        fun(event);
-      } catch (e) {
-        print('json.decode fail(): $e');
-      }
-    };
+    _onGlobalEventCb = fun;
   }
-
+  
   void setRgbaCallback(void Function(int, Uint8List) fun) {
-    context["onRgba"] = (int display, Uint8List? rgba) {
-      if (rgba != null) {
-        fun(display, rgba);
-      }
-    };
+    _onRgbaCb = fun;
   }
 
   void startDesktopWebListener() {
