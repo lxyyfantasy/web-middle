@@ -70,6 +70,7 @@ class AbModel {
 
   AbModel(this.parent) {
     addressbooks.clear();
+    if (isWeb) return;   // ← 加这行
     if (desktopType == DesktopType.main) {
       Timer.periodic(Duration(milliseconds: 500), (timer) async {
         if (_timerCounter++ % 6 == 0) {
@@ -83,6 +84,7 @@ class AbModel {
   }
 
   reset() async {
+    if (isWeb) return;   // ← 加这行
     print("reset ab model");
     addressbooks.clear();
     _currentName.value = '';
@@ -99,6 +101,10 @@ class AbModel {
   var _pulling = false;
   Future<void> pullAb(
       {required ForcePullAb? force, required bool quiet}) async {
+    if (isWeb) {
+      debugPrint('pullAb skipped on web');
+      return;
+    }
     if (_pulling) return;
     _pulling = true;
     try {

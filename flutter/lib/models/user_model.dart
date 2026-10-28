@@ -23,6 +23,10 @@ class UserModel {
   UserModel(this.parent);
 
   void refreshCurrentUser() async {
+    if (isWeb) {
+      debugPrint('refreshCurrentUser skipped on web');
+      return;
+    }
     if (bind.isDisableAccount()) return;
     final token = bind.mainGetLocalOption(key: 'access_token');
     if (token == '') {
@@ -87,6 +91,7 @@ class UserModel {
   }
 
   Future<void> reset({bool resetOther = false}) async {
+    if (isWeb) return;   // ← 加这行
     await bind.mainSetLocalOption(key: 'access_token', value: '');
     await bind.mainSetLocalOption(key: 'user_info', value: '');
     if (resetOther) {
