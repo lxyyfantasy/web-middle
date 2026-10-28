@@ -78,6 +78,10 @@ class _PeerTabPageState extends State<PeerTabPage>
 
   @override
   void initState() {
+    if (isWeb) {          // ← 加这三行
+      super.initState();
+      return;
+    }
     final uiType = bind.getLocalFlutterOption(k: kOptionPeerCardUiType);
     if (uiType != '') {
       peerCardUiType.value = int.parse(uiType) == 0
@@ -874,7 +878,7 @@ class PeerSortDropdown extends StatefulWidget {
 class _PeerSortDropdownState extends State<PeerSortDropdown> {
   @override
   void initState() {
-    if (!PeerSortType.values.contains(peerSort.value)) {
+    if (!isWeb && !PeerSortType.values.contains(peerSort.value)) {
       peerSort.value = PeerSortType.remoteId;
       bind.setLocalFlutterOption(
         k: kOptionPeerSorting,

@@ -157,7 +157,9 @@ void runMobileApp() async {
   await initEnv(kAppTypeMain);
   if (isAndroid) androidChannelInit();
   if (isAndroid) platformFFI.syncAndroidServiceAppDirConfigPath();
-  draggablePositions.load();
+  if (!isWeb) {
+    draggablePositions.load();   // ← 包进 if (!isWeb)
+  }
   await Future.wait([gFFI.abModel.loadCache(), gFFI.groupModel.loadCache()]);
   gFFI.userModel.refreshCurrentUser();
   runApp(App());

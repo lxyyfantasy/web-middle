@@ -45,7 +45,7 @@ class LoadEvent {
 final peerSearchText = "".obs;
 
 /// for peer sort, global obs value
-final peerSort = bind.getLocalFlutterOption(k: kOptionPeerSorting).obs;
+final peerSort = (isWeb ? '' : bind.getLocalFlutterOption(k: kOptionPeerSorting)).obs;
 
 // list for listener
 final obslist = [peerSearchText, peerSort].obs;
@@ -260,17 +260,11 @@ class _PeersViewState extends State<_PeersView> with WindowListener {
       while (!_exit) {
         final now = DateTime.now();
         if (!setEquals(_curPeers, _lastQueryPeers)) {
-          if (now.difference(_lastChangeTime) > const Duration(seconds: 1)) {
-            _queryOnlines(false);
-          }
-        } else {
-          if (_queryCount < _maxQueryCount) {
-            if (now.difference(_lastQueryTime) >= _queryInterval) {
-              if (_curPeers.isNotEmpty) {
-                bind.queryOnlines(ids: _curPeers.toList(growable: false));
-                _lastQueryTime = DateTime.now();
-                _queryCount += 1;
-              }
+          if (now.difference(_lastQueryTime) >= _queryInterval) {
+            if (_curPeers.isNotEmpty) {
+              if (!isWeb) bind.queryOnlines(ids: _curPeers.toList(growable: false));
+              _lastQueryTime = DateTime.now();
+              _queryCount += 1;
             }
           }
         }
@@ -281,7 +275,7 @@ class _PeersViewState extends State<_PeersView> with WindowListener {
 
   _queryOnlines(bool isLoadEvent) {
     if (_curPeers.isNotEmpty) {
-      bind.queryOnlines(ids: _curPeers.toList(growable: false));
+      if (!isWeb) bind.queryOnlines(ids: _curPeers.toList(growable: false));
       _lastQueryPeers = {..._curPeers};
       if (isLoadEvent) {
         _lastChangeTime = DateTime.now();
@@ -301,7 +295,7 @@ class _PeersViewState extends State<_PeersView> with WindowListener {
     // fallback to id sorting
     if (!PeerSortType.values.contains(sortedBy)) {
       sortedBy = PeerSortType.remoteId;
-      bind.setLocalFlutterOption(
+      if (!isWeb) bind.setLocalFlutterOption(
         k: kOptionPeerSorting,
         v: sortedBy,
       );
@@ -387,7 +381,7 @@ class RecentPeersView extends BasePeersView {
   @override
   Widget build(BuildContext context) {
     final widget = super.build(context);
-    bind.mainLoadRecentPeers();
+    if (!isWeb) bind.mainLoadRecentPeers();
     return widget;
   }
 }
@@ -409,7 +403,7 @@ class FavoritePeersView extends BasePeersView {
   @override
   Widget build(BuildContext context) {
     final widget = super.build(context);
-    bind.mainLoadFavPeers();
+    if (!isWeb) bind.mainLoadFavPeers();
     return widget;
   }
 }
@@ -431,7 +425,7 @@ class DiscoveredPeersView extends BasePeersView {
   @override
   Widget build(BuildContext context) {
     final widget = super.build(context);
-    bind.mainLoadLanPeers();
+    if (!isWeb) bind.mainLoadLanPeers();
     return widget;
   }
 }

@@ -144,7 +144,7 @@ class HomePageState extends State<HomePage> {
         ],
       );
     }
-    return Text(bind.mainGetAppNameSync());
+    return Text(isWeb ? 'RustDesk' : bind.mainGetAppNameSync());
   }
 }
 
@@ -157,7 +157,7 @@ class WebHomePage extends StatelessWidget {
       // backgroundColor: MyTheme.grayBg,
       appBar: AppBar(
         centerTitle: true,
-        title: Text(bind.mainGetAppNameSync()),
+        title: Text(isWeb ? 'RustDesk' : bind.mainGetAppNameSync()),
         actions: connectionPage.appBarActions,
       ),
       body: connectionPage,
