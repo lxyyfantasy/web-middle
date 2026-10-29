@@ -673,16 +673,24 @@ class RustdeskImpl {
 
   // get server settings
   String mainGetOptionsSync({dynamic hint}) {
-    final v = js.context.callMethod('getByName', ['options']);
-    if (v != null && v.isNotEmpty && v != 'null') return v;
     final ls = js.context['localStorage'];
-    final stored = ls.callMethod('getItem', ['options']);
-    return (stored == null || stored.isEmpty) ? '{}' : stored;
+    final keys = ['custom-rendezvous-server', 'relay-server', 'api-server', 'key'];
+    final map = <String, String>{};
+    for (final k in keys) {
+      final v = ls.callMethod('getItem', [k]);
+      if (v is String && v.isNotEmpty) map[k] = v;
+    }
+    return jsonEncode(map);
   }
 
   Future<void> mainSetOptions({required String json, dynamic hint}) {
     final ls = js.context['localStorage'];
-    ls.callMethod('setItem', ['options', json]);
+    try {
+      final map = jsonDecode(json) as Map<String, dynamic>;
+      for (final e in map.entries) {
+        ls.callMethod('setItem', [e.key, e.value.toString()]);
+      }
+    } catch (_) {}
     return Future.value();
   }
 
@@ -770,7 +778,9 @@ class RustdeskImpl {
   }
 
   Future<String> mainGetApiServer({dynamic hint}) {
-    return Future(() => js.context.callMethod('getByName', ['api_server']));
+    final ls = js.context['localStorage'];
+    final v = ls.callMethod('getItem', ['api-server']);
+    return Future.value((v == null || v is! String) ? '' : v);
   }
 
   Future<void> mainPostRequest(
@@ -829,11 +839,15 @@ class RustdeskImpl {
   }
 
   Future<String> mainGetMyId({dynamic hint}) {
-    throw UnimplementedError();
+    final ls = js.context['localStorage'];
+    final v = ls.callMethod('getItem', ['my-id']);
+    return Future.value((v == null || v is! String) ? '' : v);
   }
 
   Future<String> mainGetUuid({dynamic hint}) {
-    throw UnimplementedError();
+    final ls = js.context['localStorage'];
+    final v = ls.callMethod('getItem', ['my-uuid']);
+    return Future.value((v == null || v is! String) ? '' : v);
   }
 
   Future<String> mainGetPeerOption(

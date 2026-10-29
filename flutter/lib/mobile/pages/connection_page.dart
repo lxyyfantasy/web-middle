@@ -212,41 +212,35 @@ class _ConnectionPageState extends State<ConnectionPage> {
                           _fetchPeers();
                         }
                       });
-                      if (!isWeb) {
+                                            if (!isWeb) {
                         final textLength = fieldTextEditingController.value.text.length;
                         fieldTextEditingController.selection = TextSelection(
                             baseOffset: 0, extentOffset: textLength);
                       }
-                      return AutoSizeTextField(
+                      return TextField(
                         controller: fieldTextEditingController,
                         focusNode: fieldFocusNode,
-                        minFontSize: 18,
                         autocorrect: false,
                         enableSuggestions: false,
                         keyboardType: TextInputType.visiblePassword,
-                        // keyboardType: TextInputType.number,
+                        maxLines: 1,
                         onChanged: (String text) {
                           _idController.id = text;
                         },
+                        onSubmitted: (_) => onConnect(),
                         style: const TextStyle(
                           fontFamily: 'WorkSans',
                           fontWeight: FontWeight.bold,
-                          fontSize: 30,
+                          fontSize: 22,
+                          height: 1.4,
                           color: MyTheme.idColor,
                         ),
                         decoration: InputDecoration(
-                          labelText: translate('Remote ID'),
-                          // hintText: 'Enter your remote ID',
+                          hintText: translate('Remote ID'),
                           border: InputBorder.none,
                           helperStyle: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
-                            color: MyTheme.darkGray,
-                          ),
-                          labelStyle: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            letterSpacing: 0.2,
                             color: MyTheme.darkGray,
                           ),
                         ),
