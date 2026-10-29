@@ -148,7 +148,7 @@ void setTemporaryPasswordLengthDialog(
 
 void showServerSettingsWithValue(
     ServerConfig serverConfig, OverlayDialogManager dialogManager) async {
-  var isInProgress = false;
+  var isInProgress = false.obs;
   final idCtrl = TextEditingController(text: serverConfig.idServer);
   final relayCtrl = TextEditingController(text: serverConfig.relayServer);
   final apiCtrl = TextEditingController(text: serverConfig.apiServer);
@@ -167,9 +167,7 @@ void showServerSettingsWithValue(
 
   dialogManager.show((setState, close, context) {
     Future<bool> submit() async {
-      setState(() {
-        isInProgress = true;
-      });
+      isInProgress.value = true;
       bool ret = await setServerConfig(
           null,
           errMsgs,
@@ -178,9 +176,7 @@ void showServerSettingsWithValue(
               relayServer: relayCtrl.text.trim(),
               apiServer: apiCtrl.text.trim(),
               key: keyCtrl.text.trim()));
-      setState(() {
-        isInProgress = false;
-      });
+      isInProgress.value = false;
       return ret;
     }
 
@@ -238,7 +234,7 @@ void showServerSettingsWithValue(
                       ),
                     ),
                     // NOT use Offstage to wrap LinearProgressIndicator
-                    if (isInProgress) const LinearProgressIndicator(),
+                    if (isInProgress.value) const LinearProgressIndicator(),
                   ]))),
       actions: [
         dialogButton('Cancel', onPressed: () {
