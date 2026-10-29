@@ -131,7 +131,7 @@ class RustdeskImpl {
   Future<void> mainDeviceName({required String name, dynamic hint}) async {}
   Future<void> mainChangeId({required String newId, dynamic hint}) async {}
   Future<String> mainGetAsyncStatus({dynamic hint}) async => '';
-  Future<String> mainGetLoginDeviceInfo({dynamic hint}) async => jsonEncode({'os': 'web'});
+  String mainGetLoginDeviceInfo({dynamic hint}) => jsonEncode({'os': 'web'});
 
   // ---------- peers / recent / fav ----------
   Future<void> mainLoadRecentPeers({dynamic hint}) async => _jsSet('load_recent_peers');
@@ -154,6 +154,17 @@ class RustdeskImpl {
       _jsGet('peer_has_password', id) == 'true';
   Future<bool> mainPeerExists({required String id, dynamic hint}) async =>
       _jsGet('peer_exists', id) == 'true';
+  String mainGetPeerSync({required String id, dynamic hint}) {
+    try {
+      final peers = jsonDecode(_jsGet('peers')) as List;
+      for (final e in peers) {
+        if (e is List && e.isNotEmpty && e[0] == id) {
+          return jsonEncode({'id': id, 'info': jsonDecode(e[1].toString())});
+        }
+      }
+    } catch (_) {}
+    return '{}';
+  }
   String mainGetPeerOptionSync({required String id, required String key, dynamic hint}) =>
       _jsGet('option:peer', jsonEncode({'id': id, 'name': key}));
   Future<String> mainGetPeerOption({required String id, required String key, dynamic hint}) async =>
@@ -181,6 +192,13 @@ class RustdeskImpl {
   Future<String> mainGetLastRemoteId({dynamic hint}) async => _jsGet('option', 'last_remote_id');
   Future<void> queryOnlines({required List<String> ids, dynamic hint}) async =>
       _jsSet('query_onlines', jsonEncode(ids));
+  int peerGetDefaultSessionsCount({required String id, dynamic hint}) => 1;
+
+  // ---------- lan / discover ----------
+  Future<void> mainDiscover({dynamic hint}) async {}
+  Future<void> mainRemoveDiscovered({required String id, dynamic hint}) async {}
+  Future<void> mainLoadLanPeers({dynamic hint}) async {}
+  String mainLoadLanPeersSync({dynamic hint}) => '{}';
 
   // ---------- ab / group cache ----------
   Future<void> mainSaveAb({required String json, dynamic hint}) async {}
@@ -211,6 +229,12 @@ class RustdeskImpl {
     _jsSet('session_add_sync', jsonEncode({'id': id, 'password': password}));
     return '';
   }
+  String sessionAddExistedSync({
+    required String id,
+    required UuidValue sessionId,
+    required Int32List displays,
+    dynamic hint,
+  }) => '';
   Stream<EventToUI> sessionStart({required UuidValue sessionId, required String id, dynamic hint}) {
     _jsSet('connect', id);
     return const Stream.empty();
@@ -253,6 +277,8 @@ class RustdeskImpl {
   Future<void> sessionInputString({required UuidValue sessionId, required String value, dynamic hint}) async =>
       _jsSet('input_string', value);
   Future<void> sessionSendMouse({required UuidValue sessionId, required String msg, dynamic hint}) async =>
+      _jsSet('send_mouse', msg);
+  Future<void> sessionSendPointer({required UuidValue sessionId, required String msg, dynamic hint}) async =>
       _jsSet('send_mouse', msg);
   Future<void> sessionInputOsPassword({required UuidValue sessionId, required String value, dynamic hint}) async =>
       _jsSet('input_os_password', value);
@@ -401,7 +427,7 @@ class RustdeskImpl {
   String mainUriPrefixSync({dynamic hint}) => 'rustdesk://';
   Future<String> mainGetLicense({dynamic hint}) async => '';
   Future<String> mainGetLangs({dynamic hint}) async => '';
-  Future<String> mainGetSoundInputs({dynamic hint}) async => '[]';
+  Future<List<String>> mainGetSoundInputs({dynamic hint}) async => [];
   Future<String?> mainGetDefaultSoundInput({dynamic hint}) async => null;
   Future<void> mainSetSocks({required String proxy, required String username, required String password, dynamic hint}) async {}
   Future<List<String>> mainGetSocks({dynamic hint}) async => [];
@@ -417,7 +443,7 @@ class RustdeskImpl {
   String mainGetMainDisplay({dynamic hint}) => _jsGet('main_display');
   String mainGetDisplays({dynamic hint}) => '';
   String mainGetNewStoredPeersSync({dynamic hint}) => '';
-  bool isPresetPassword({dynamic hint}) => false;
+  Future<bool> isPresetPassword({dynamic hint}) async => false;
   bool isSelinuxEnforcing({dynamic hint}) => false;
   bool isIncomingOnly({dynamic hint}) => false;
   bool isOutgoingOnly({dynamic hint}) => false;
@@ -431,6 +457,8 @@ class RustdeskImpl {
   Future<void> mainTestWallpaper({required int second, dynamic hint}) async {}
   Future<bool> mainSupportRemoveWallpaper({dynamic hint}) async => false;
   Future<String> mainHandleWaylandScreencastRestoreToken({required String key, required String value, dynamic hint}) async => '';
+  Future<String> mainGetError({dynamic hint}) async => '';
+  String mainVideoSaveDirectory({required bool root, dynamic hint}) => '';
 
   // ---------- file transfer / port forward / rdp（Web 暂不支持，安全空实现） ----------
   Future<void> sessionReadRemoteDir({required UuidValue sessionId, required String path, required bool includeHidden, dynamic hint}) async {}
@@ -461,7 +489,6 @@ class RustdeskImpl {
   Future<void> sessionHandleFlutterKeyEvent({required UuidValue sessionId, required String name, required int platformCode, required int positionCode, required int lockModes, required bool downOrUp, dynamic hint}) async {}
   void sessionEnterOrLeave({required UuidValue sessionId, required bool enter, dynamic hint}) {}
   Future<void> sessionSendChat({required UuidValue sessionId, required String text, dynamic hint}) async {}
-  Future<void> sessionPeerOption({required UuidValue sessionId, required String name, required String value, dynamic hint}) async {}
   Future<void> setCurSessionId({required UuidValue sessionId, dynamic hint}) async {}
   Future<void> sessionToggleVirtualDisplay({required UuidValue sessionId, required int index, required bool on, dynamic hint}) async {}
   Future<void> sessionRecordScreen({required UuidValue sessionId, required bool start, required int display, required int width, required int height, dynamic hint}) async {}
@@ -502,6 +529,4 @@ class RustdeskImpl {
   Future<void> pluginSyncUi({required String syncTo, dynamic hint}) async {}
   Future<void> pluginListReload({dynamic hint}) async {}
   Future<void> pluginInstall({required String id, required bool b, dynamic hint}) async {}
-  Future<void> mainStartIpcUrlServer2({dynamic hint}) async {}
-  Future<void> mainOnMainWindowClose2({dynamic hint}) async {}
 }
