@@ -15,15 +15,9 @@ mixin _$EventToUI {
 }
 
 sealed class EventToUI {
-  const factory EventToUI.event(
-    String field0,
-  ) = EventToUI_Event;
-  const factory EventToUI.rgba(
-    int field0,
-  ) = EventToUI_Rgba;
-  const factory EventToUI.texture(
-    int field0,
-  ) = EventToUI_Texture;
+  const factory EventToUI.event(String field0) = EventToUI_Event;
+  const factory EventToUI.rgba(int field0) = EventToUI_Rgba;
+  const factory EventToUI.texture(int field0) = EventToUI_Texture;
 }
 
 class EventToUI_Event implements EventToUI {
@@ -44,637 +38,47 @@ class EventToUI_Texture implements EventToUI {
   int get field0 => field;
 }
 
+String _jsGet(String name, [String arg = '']) {
+  final v = js.context.callMethod('getByName', [name, arg]);
+  return (v == null) ? '' : v.toString();
+}
+
+void _jsSet(String name, [String value = '']) {
+  js.context.callMethod('setByName', [name, value]);
+}
+
 class RustdeskImpl {
-  Future<void> stopGlobalEventStream({required String appType, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> hostStopSystemKeyPropagate(
-      {required bool stopped, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  int peerGetDefaultSessionsCount({required String id, dynamic hint}) {
-    return 0;
-  }
-
-  String sessionAddExistedSync(
-      {required String id,
-      required UuidValue sessionId,
-      required Int32List displays,
-      dynamic hint}) {
-    return '';
-  }
-
-  String sessionAddSync(
-      {required UuidValue sessionId,
-      required String id,
-      required bool isFileTransfer,
-      required bool isPortForward,
-      required bool isRdp,
-      required String switchUuid,
-      required bool forceRelay,
-      required String password,
-      required bool isSharedPassword,
-      dynamic hint}) {
-    return js.context.callMethod('setByName', [
-      'session_add_sync',
-      jsonEncode({'id': id, 'password': password})
-    ]);
-  }
-
-  Stream<EventToUI> sessionStart(
-      {required UuidValue sessionId, required String id, dynamic hint}) {
-    js.context.callMethod('setByName', [
-      'session_start',
-      jsonEncode({'id': id})
-    ]);
-    return Stream.empty();
-  }
-
-  Stream<EventToUI> sessionStartWithDisplays(
-      {required UuidValue sessionId,
-      required String id,
-      required Int32List displays,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<bool?> sessionGetRemember(
-      {required UuidValue sessionId, dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('getByName', ['remember']) == 'true');
-  }
-
-  Future<bool?> sessionGetToggleOption(
-      {required UuidValue sessionId, required String arg, dynamic hint}) {
-    return Future(
-        () => sessionGetToggleOptionSync(sessionId: sessionId, arg: arg));
-  }
-
-  bool sessionGetToggleOptionSync(
-      {required UuidValue sessionId, required String arg, dynamic hint}) {
-    return 'true' == js.context.callMethod('getByName', ['option:toggle', arg]);
-  }
-
-  Future<String?> sessionGetOption(
-      {required UuidValue sessionId, required String arg, dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('getByName', ['option:session', arg]));
-  }
-
-  Future<void> sessionLogin(
-      {required UuidValue sessionId,
-      required String osUsername,
-      required String osPassword,
-      required String password,
-      required bool remember,
-      dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'login',
-          jsonEncode({
-            'os_username': osUsername,
-            'os_password': osPassword,
-            'password': password,
-            'remember': remember
-          })
-        ]));
-  }
-
-  Future<void> sessionSend2Fa(
-      {required UuidValue sessionId, required String code, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', ['send_2fa', code]));
-  }
-
-  Future<void> sessionClose({required UuidValue sessionId, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', ['session_close']));
-  }
-
-  Future<void> sessionRefresh(
-      {required UuidValue sessionId, required int display, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', ['refresh']));
-  }
-
-  Future<void> sessionRecordScreen(
-      {required UuidValue sessionId,
-      required bool start,
-      required int display,
-      required int width,
-      required int height,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionRecordStatus(
-      {required UuidValue sessionId, required bool status, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionReconnect(
-      {required UuidValue sessionId, required bool forceRelay, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', ['reconnect']));
-  }
-
-  Future<void> sessionToggleOption(
-      {required UuidValue sessionId, required String value, dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('setByName', ['toggle_option', value]));
-  }
-
-  Future<void> sessionTogglePrivacyMode(
-      {required UuidValue sessionId,
-      required String implKey,
-      required bool on,
-      dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'toggle_option',
-          jsonEncode({implKey, on})
-        ]));
-  }
-
-  Future<String?> sessionGetFlutterOption(
-      {required UuidValue sessionId, required String k, dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('getByName', ['option:flutter:peer', k]));
-  }
-
-  Future<void> sessionSetFlutterOption(
-      {required UuidValue sessionId,
-      required String k,
-      required String v,
-      dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'option:flutter:peer',
-          jsonEncode({'name': k, 'value': v})
-        ]));
-  }
-
-  int getNextTextureKey({dynamic hint}) {
-    return 0;
-  }
-
-  String getLocalFlutterOption({required String k, dynamic hint}) {
-    return js.context.callMethod('getByName', ['option:flutter:local', k]);
-  }
-
-  Future<void> setLocalFlutterOption(
-      {required String k, required String v, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'option:flutter:local',
-          jsonEncode({'name': k, 'value': v})
-        ]));
-  }
-
-  String getLocalKbLayoutType({dynamic hint}) {
-      return js.context.callMethod('getByName', ['option:local', 'kb_layout']) ?? '';
-  }
-
-  Future<void> setLocalKbLayoutType(
-      {required String kbLayoutType, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'option:local',
-          jsonEncode({'name': 'kb_layout', 'value': kbLayoutType})
-        ]));
-  }
-
-  Future<String?> sessionGetViewStyle(
-      {required UuidValue sessionId, dynamic hint}) {
-    return Future(() =>
-        js.context.callMethod('getByName', ['option:session', 'view_style']));
-  }
-
-  Future<void> sessionSetViewStyle(
-      {required UuidValue sessionId, required String value, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'option:session',
-          jsonEncode({'name': 'view_style', 'value': value})
-        ]));
-  }
-
-  Future<String?> sessionGetScrollStyle(
-      {required UuidValue sessionId, dynamic hint}) {
-    return Future(() =>
-        js.context.callMethod('getByName', ['option:session', 'scroll_style']));
-  }
-
-  Future<void> sessionSetScrollStyle(
-      {required UuidValue sessionId, required String value, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'option:session',
-          jsonEncode({'name': 'scroll_style', 'value': value})
-        ]));
-  }
-
-  Future<String?> sessionGetImageQuality(
-      {required UuidValue sessionId, dynamic hint}) {
-    return Future(() => js.context
-        .callMethod('getByName', ['option:session', 'image_quality']));
-  }
-
-  Future<void> sessionSetImageQuality(
-      {required UuidValue sessionId, required String value, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'option:session',
-          jsonEncode({'name': 'image_quality', 'value': value})
-        ]));
-  }
-
-  Future<String?> sessionGetKeyboardMode(
-      {required UuidValue sessionId, dynamic hint}) {
-    final mode =
-        js.context.callMethod('getByName', ['option:session', 'keyboard_mode']);
-    return Future(() => mode == '' ? null : mode);
-  }
-
-  Future<void> sessionSetKeyboardMode(
-      {required UuidValue sessionId, required String value, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'option:session',
-          jsonEncode({'name': 'keyboard_mode', 'value': value})
-        ]));
-  }
-
-  String? sessionGetReverseMouseWheelSync(
-      {required UuidValue sessionId, dynamic hint}) {
-    return js.context
-        .callMethod('getByName', ['option:session', 'reverse_mouse_wheel']);
-  }
-
-  Future<void> sessionSetReverseMouseWheel(
-      {required UuidValue sessionId, required String value, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'option:session',
-          jsonEncode({'name': 'reverse_mouse_wheel', 'value': value})
-        ]));
-  }
-
-  String? sessionGetDisplaysAsIndividualWindows(
-      {required UuidValue sessionId, dynamic hint}) {
-    return js.context.callMethod(
-        'getByName', ['option:session', 'displays_as_individual_windows']);
-  }
-
-  Future<void> sessionSetDisplaysAsIndividualWindows(
-      {required UuidValue sessionId, required String value, dynamic hint}) {
-    return Future.value();
-  }
-
-  String? sessionGetUseAllMyDisplaysForTheRemoteSession(
-      {required UuidValue sessionId, dynamic hint}) {
-    return '';
-  }
-
-  Future<void> sessionSetUseAllMyDisplaysForTheRemoteSession(
-      {required UuidValue sessionId, required String value, dynamic hint}) {
-    return Future.value();
-  }
-
-  Future<Int32List?> sessionGetCustomImageQuality(
-      {required UuidValue sessionId, dynamic hint}) {
-    try {
-      return Future(() => Int32List.fromList([
-            int.parse(js.context.callMethod(
-                'getByName', ['option:session', 'custom_image_quality']))
-          ]));
-    } catch (e) {
-      return Future.value(null);
-    }
-  }
-
-  bool sessionIsKeyboardModeSupported(
-      {required UuidValue sessionId, required String mode, dynamic hint}) {
-    return mode == kKeyLegacyMode;
-  }
-
-  bool sessionIsMultiUiSession({required UuidValue sessionId, dynamic hint}) {
-    return false;
-  }
-
-  Future<void> sessionSetCustomImageQuality(
-      {required UuidValue sessionId, required int value, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'option:session',
-          jsonEncode({'name': 'custom_image_quality', 'value': value})
-        ]));
-  }
-
-  Future<void> sessionSetCustomFps(
-      {required UuidValue sessionId, required int fps, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'option:session',
-          jsonEncode({'name': 'custom_fps', 'value': fps})
-        ]));
-  }
-
-  Future<void> sessionLockScreen({required UuidValue sessionId, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', ['lock_screen']));
-  }
-
-  Future<void> sessionCtrlAltDel({required UuidValue sessionId, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', ['ctrl_alt_del']));
-  }
-
-  Future<void> sessionSwitchDisplay(
-      {required bool isDesktop,
-      required UuidValue sessionId,
-      required Int32List value,
-      dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'switch_display',
-          jsonEncode({
-            isDesktop: isDesktop,
-            sessionId: sessionId.toString(),
-            value: value
-          })
-        ]));
-  }
-
-  Future<void> sessionHandleFlutterKeyEvent(
-      {required UuidValue sessionId,
-      required String name,
-      required int platformCode,
-      required int positionCode,
-      required int lockModes,
-      required bool downOrUp,
-      dynamic hint}) {
-    // TODO: map mode
-    throw UnimplementedError();
-  }
-
-  void sessionEnterOrLeave(
-      {required UuidValue sessionId, required bool enter, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionInputKey(
-      {required UuidValue sessionId,
-      required String name,
-      required bool down,
-      required bool press,
-      required bool alt,
-      required bool ctrl,
-      required bool shift,
-      required bool command,
-      dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'input_key',
-          jsonEncode({
-            'name': name,
-            if (down) 'down': 'true',
-            if (press) 'press': 'true',
-            if (alt) 'alt': 'true',
-            if (ctrl) 'ctrl': 'true',
-            if (shift) 'shift': 'true',
-            if (command) 'command': 'true'
-          })
-        ]));
-  }
-
-  Future<void> sessionInputString(
-      {required UuidValue sessionId, required String value, dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('setByName', ['input_string', value]));
-  }
-
-  Future<void> sessionSendChat(
-      {required UuidValue sessionId, required String text, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionPeerOption(
-      {required UuidValue sessionId,
-      required String name,
-      required String value,
-      dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'option:session',
-          jsonEncode({'name': name, 'value': value})
-        ]));
-  }
-
-  Future<String> sessionGetPeerOption(
-      {required UuidValue sessionId, required String name, dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('getByName', ['option:session', name]));
-  }
-
-  Future<void> sessionInputOsPassword(
-      {required UuidValue sessionId, required String value, dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('setByName', ['input_os_password', value]));
-  }
-
-  Future<void> sessionReadRemoteDir(
-      {required UuidValue sessionId,
-      required String path,
-      required bool includeHidden,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionSendFiles(
-      {required UuidValue sessionId,
-      required int actId,
-      required String path,
-      required String to,
-      required int fileNum,
-      required bool includeHidden,
-      required bool isRemote,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionSetConfirmOverrideFile(
-      {required UuidValue sessionId,
-      required int actId,
-      required int fileNum,
-      required bool needOverride,
-      required bool remember,
-      required bool isUpload,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionRemoveFile(
-      {required UuidValue sessionId,
-      required int actId,
-      required String path,
-      required int fileNum,
-      required bool isRemote,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionReadDirRecursive(
-      {required UuidValue sessionId,
-      required int actId,
-      required String path,
-      required bool isRemote,
-      required bool showHidden,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionRemoveAllEmptyDirs(
-      {required UuidValue sessionId,
-      required int actId,
-      required String path,
-      required bool isRemote,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionCancelJob(
-      {required UuidValue sessionId, required int actId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionCreateDir(
-      {required UuidValue sessionId,
-      required int actId,
-      required String path,
-      required bool isRemote,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> sessionReadLocalDirSync(
-      {required UuidValue sessionId,
-      required String path,
-      required bool showHidden,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> sessionGetPlatform(
-      {required UuidValue sessionId, required bool isRemote, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionLoadLastTransferJobs(
-      {required UuidValue sessionId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionAddJob(
-      {required UuidValue sessionId,
-      required int actId,
-      required String path,
-      required String to,
-      required int fileNum,
-      required bool includeHidden,
-      required bool isRemote,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionResumeJob(
-      {required UuidValue sessionId,
-      required int actId,
-      required bool isRemote,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionElevateDirect(
-      {required UuidValue sessionId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionElevateWithLogon(
-      {required UuidValue sessionId,
-      required String username,
-      required String password,
-      dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'elevate_with_logon',
-          jsonEncode({username, password})
-        ]));
-  }
-
-  Future<void> sessionSwitchSides(
-      {required UuidValue sessionId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionChangeResolution(
-      {required UuidValue sessionId,
-      required int display,
-      required int width,
-      required int height,
-      dynamic hint}) {
-    // note: restore on disconnected
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionSetSize(
-      {required UuidValue sessionId,
-      required int display,
-      required int width,
-      required int height,
-      dynamic hint}) {
-    return Future.value();
-  }
-
-  Future<void> sessionSendSelectedSessionId(
-      {required UuidValue sessionId, required String sid, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<List<String>> mainGetSoundInputs({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String?> mainGetDefaultSoundInput({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String mainGetLoginDeviceInfo({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainChangeId({required String newId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainGetAsyncStatus({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainGetOption({required String key, dynamic hint}) {
-    return Future.value(mainGetOptionSync(key: key));
-  }
-
-  String mainGetOptionSync({required String key, dynamic hint}) {
-    return js.context.callMethod('getByName', ['option', key]);
-  }
-
-  Future<String> mainGetError({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainShowOption({required String key, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainSetOption(
-      {required String key, required String value, dynamic hint}) {
-    js.context.callMethod('setByName', [
-      'option',
-      jsonEncode({'name': key, 'value': value})
-    ]);
-    return Future.value();
-  }
-
-  // get server settings
-  Future<String> mainGetOptions({dynamic hint}) {
-    return Future(() => mainGetOptionsSync());
-  }
-
-  // get server settings
+  // ---------- global event / lifecycle ----------
+  Future<void> stopGlobalEventStream({required String appType, dynamic hint}) async {}
+  Future<void> hostStopSystemKeyPropagate({required bool stopped, dynamic hint}) async {}
+  Future<void> mainInit({required String appDir, dynamic hint}) async {}
+  Future<void> mainStartDbusServer({dynamic hint}) async {}
+  Future<void> mainStartIpcUrlServer({dynamic hint}) async {}
+  Future<void> mainOnMainWindowClose({dynamic hint}) async {}
+  void dispose() {}
+
+  // ---------- options ----------
+  Future<String> mainGetOption({required String key, dynamic hint}) async => mainGetOptionSync(key: key);
+  String mainGetOptionSync({required String key, dynamic hint}) => _jsGet('option', key);
+  Future<void> mainSetOption({required String key, required String value, dynamic hint}) async {
+    _jsSet('option', jsonEncode({'name': key, 'value': value}));
+  }
+  String mainGetLocalOption({required String key, dynamic hint}) => _jsGet('option:local', key);
+  Future<void> mainSetLocalOption({required String key, required String value, dynamic hint}) async {
+    _jsSet('option:local', jsonEncode({'name': key, 'value': value}));
+  }
+  String getLocalFlutterOption({required String k, dynamic hint}) => _jsGet('option:flutter:local', k);
+  Future<void> setLocalFlutterOption({required String k, required String v, dynamic hint}) async {
+    _jsSet('option:flutter:local', jsonEncode({'name': k, 'value': v}));
+  }
+  String getLocalKbLayoutType({dynamic hint}) => _jsGet('option:local', 'kb_layout');
+  Future<void> setLocalKbLayoutType({required String kbLayoutType, dynamic hint}) async {
+    _jsSet('option:local', jsonEncode({'name': 'kb_layout', 'value': kbLayoutType}));
+  }
+  Future<String> mainGetOptions({dynamic hint}) async => mainGetOptionsSync();
   String mainGetOptionsSync({dynamic hint}) {
     final ls = js.context['localStorage'];
-    final keys = ['custom-rendezvous-server', 'relay-server', 'api-server', 'key'];
+    const keys = ['custom-rendezvous-server', 'relay-server', 'api-server', 'key'];
     final map = <String, String>{};
     for (final k in keys) {
       final v = ls.callMethod('getItem', [k]);
@@ -682,957 +86,422 @@ class RustdeskImpl {
     }
     return jsonEncode(map);
   }
-
-  Future<void> mainSetOptions({required String json, dynamic hint}) {
+  Future<void> mainSetOptions({required String json, dynamic hint}) async {
     final ls = js.context['localStorage'];
     try {
       final map = jsonDecode(json) as Map<String, dynamic>;
-      for (final e in map.entries) {
-        ls.callMethod('setItem', [e.key, e.value.toString()]);
-      }
+      map.forEach((k, v) => ls.callMethod('setItem', [k, v.toString()]));
     } catch (_) {}
-    return Future.value();
   }
-
-  Future<String> mainTestIfValidServer(
-      {required String server, required bool testWithProxy, dynamic hint}) {
-    // TODO: implement
-    return Future.value('');
-  }
-
-  Future<void> mainSetSocks(
-      {required String proxy,
-      required String username,
-      required String password,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<List<String>> mainGetSocks({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainGetAppName({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String mainGetAppNameSync({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String mainUriPrefixSync({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainGetLicense({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainGetVersion({dynamic hint}) {
-    return Future(() => js.context.callMethod('getByName', ['version']));
-  }
-
-  Future<List<String>> mainGetFav({dynamic hint}) {
-    List<String> favs = [];
-    try {
-      favs = (jsonDecode(js.context.callMethod('getByName', ['fav']))
-              as List<dynamic>)
-          .map((e) => e.toString())
-          .toList();
-    } catch (e) {
-      debugPrint('Failed to load favs: $e');
-    }
-    return Future.value(favs);
-  }
-
-  Future<void> mainStoreFav({required List<String> favs, dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('setByName', ['fav', jsonEncode(favs)]));
-  }
-
-  String mainGetPeerSync({required String id, dynamic hint}) {
-    // TODO:
-    throw UnimplementedError();
-  }
-
-  Future<String> mainGetLanPeers({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainGetConnectStatus({dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('getByName', ["get_conn_status"]));
-  }
-
-  Future<void> mainCheckConnectStatus({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<bool> mainIsUsingPublicServer({dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('setByName', ["is_using_public_server"]));
-  }
-
-  Future<void> mainDiscover({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainGetApiServer({dynamic hint}) {
+  Future<String> mainTestIfValidServer({required String server, required bool testWithProxy, dynamic hint}) async =>
+      _jsGet('test_if_valid_server', server);
+  Future<bool> mainIsUsingPublicServer({dynamic hint}) async => _jsGet('is_using_public_server') == 'true';
+  Future<String> mainGetConnectStatus({dynamic hint}) async => _jsGet('get_conn_status');
+  Future<void> mainCheckConnectStatus({dynamic hint}) async {}
+  Future<String> mainGetApiServer({dynamic hint}) async {
     final ls = js.context['localStorage'];
     final v = ls.callMethod('getItem', ['api-server']);
-    return Future.value((v == null || v is! String) ? '' : v);
+    return (v == null || v is! String) ? '' : v;
   }
-
-  Future<void> mainPostRequest(
-      {required String url,
-      required String body,
-      required String header,
-      dynamic hint}) {
-    throw UnimplementedError();
+  Future<String> mainGetVersion({dynamic hint}) async => _jsGet('version');
+  int versionToNumber({required String v, dynamic hint}) =>
+      int.tryParse(_jsGet('get_version_number', v)) ?? 0;
+  bool mainShowOption({required String key, dynamic hint}) => true;
+  Future<void> mainSetUserDefaultOption({required String key, required String value, dynamic hint}) async {
+    _jsSet('option:user:default', jsonEncode({'name': key, 'value': value}));
   }
+  String mainGetUserDefaultOption({required String key, dynamic hint}) => _jsGet('option:user:default', key);
+  Future<void> mainChangeTheme({required String dark, dynamic hint}) async {}
+  Future<void> mainChangeLanguage({required String lang, dynamic hint}) async {}
+  bool mainIsOptionFixed({required String key, dynamic hint}) => false;
+  Future<bool> optionSynced({dynamic hint}) async => true;
 
-  Future<bool> mainGetProxyStatus({dynamic hint}) {
-    return Future(() => false);
-  }
-
-  Future<void> mainHttpRequest({
-    required String url,
-    required String method,
-    String? body,
-    required String header,
-    dynamic hint,
-  }) {
-    throw UnimplementedError();
-  }
-
-  Future<String?> mainGetHttpStatus({required String url, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String mainGetLocalOption({required String key, dynamic hint}) {
-    return js.context.callMethod('getByName', ['option:local', key]);
-  }
-
-  String mainGetEnv({required String key, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainSetLocalOption(
-      {required String key, required String value, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', [
-          'option:local',
-          jsonEncode({'name': key, 'value': value})
-        ]));
-  }
-
-  String mainGetInputSource({dynamic hint}) {
-    // // rdev grab mode
-    // const CONFIG_INPUT_SOURCE_1 = "Input source 1";
-    // // flutter grab mode
-    // const CONFIG_INPUT_SOURCE_2 = "Input source 2";
-    return 'Input source 2';
-  }
-
-  Future<void> mainSetInputSource(
-      {required UuidValue sessionId, required String value, dynamic hint}) {
-    return Future.value();
-  }
-
-  Future<String> mainGetMyId({dynamic hint}) {
+  // ---------- identity ----------
+  Future<String> mainGetMyId({dynamic hint}) async {
     final ls = js.context['localStorage'];
     final v = ls.callMethod('getItem', ['my-id']);
-    return Future.value((v == null || v is! String) ? '' : v);
+    return (v == null || v is! String) ? '' : v;
   }
-
-  Future<String> mainGetUuid({dynamic hint}) {
+  Future<String> mainGetUuid({dynamic hint}) async {
     final ls = js.context['localStorage'];
     final v = ls.callMethod('getItem', ['my-uuid']);
-    return Future.value((v == null || v is! String) ? '' : v);
+    return (v == null || v is! String) ? '' : v;
   }
+  Future<void> mainDeviceId({required String id, dynamic hint}) async {}
+  Future<void> mainDeviceName({required String name, dynamic hint}) async {}
+  Future<void> mainChangeId({required String newId, dynamic hint}) async {}
+  Future<String> mainGetAsyncStatus({dynamic hint}) async => '';
+  Future<String> mainGetLoginDeviceInfo({dynamic hint}) async => jsonEncode({'os': 'web'});
 
-  Future<String> mainGetPeerOption(
-      {required String id, required String key, dynamic hint}) {
-    return Future(() => mainGetPeerOptionSync(id: id, key: key, hint: hint));
+  // ---------- peers / recent / fav ----------
+  Future<void> mainLoadRecentPeers({dynamic hint}) async => _jsSet('load_recent_peers');
+  String mainLoadRecentPeersSync({dynamic hint}) => _jsGet('load_recent_peers_sync');
+  Future<void> mainLoadFavPeers({dynamic hint}) async => _jsSet('load_fav_peers');
+  Future<List<String>> mainGetFav({dynamic hint}) async {
+    try {
+      final raw = _jsGet('fav');
+      if (raw.isEmpty) return [];
+      return (jsonDecode(raw) as List).map((e) => e.toString()).toList();
+    } catch (_) {
+      return [];
+    }
   }
-
-  String mainGetPeerOptionSync(
-      {required String id, required String key, dynamic hint}) {
-    return js.context.callMethod('getByName', [
-      'option:peer',
-      jsonEncode({'id': id, 'name': key})
-    ]);
-  }
-
-  String mainGetPeerFlutterOptionSync(
-      {required String id, required String k, dynamic hint}) {
-    return js.context.callMethod('getByName', ['option:flutter:peer', k]);
-  }
-
-  void mainSetPeerFlutterOptionSync(
-      {required String id,
-      required String k,
-      required String v,
-      dynamic hint}) {
-    js.context.callMethod('setByName', [
-      'option:flutter:peer',
-      jsonEncode({'name': k, 'value': v})
-    ]);
-  }
-
-  Future<void> mainSetPeerOption(
-      {required String id,
-      required String key,
-      required String value,
-      dynamic hint}) {
-    mainSetPeerOptionSync(id: id, key: key, value: value, hint: hint);
-    return Future.value();
-  }
-
-  bool mainSetPeerOptionSync(
-      {required String id,
-      required String key,
-      required String value,
-      dynamic hint}) {
-    js.context.callMethod('setByName', [
-      'option:peer',
-      jsonEncode({'id': id, 'name': key, 'value': value})
-    ]);
+  Future<void> mainStoreFav({required List<String> favs, dynamic hint}) async =>
+      _jsSet('fav', jsonEncode(favs));
+  Future<void> mainRemovePeer({required String id, dynamic hint}) async => _jsSet('remove', id);
+  Future<void> mainForgetPassword({required String id, dynamic hint}) async => _jsSet('forget', id);
+  Future<bool> mainPeerHasPassword({required String id, dynamic hint}) async =>
+      _jsGet('peer_has_password', id) == 'true';
+  Future<bool> mainPeerExists({required String id, dynamic hint}) async =>
+      _jsGet('peer_exists', id) == 'true';
+  String mainGetPeerOptionSync({required String id, required String key, dynamic hint}) =>
+      _jsGet('option:peer', jsonEncode({'id': id, 'name': key}));
+  Future<String> mainGetPeerOption({required String id, required String key, dynamic hint}) async =>
+      mainGetPeerOptionSync(id: id, key: key);
+  bool mainSetPeerOptionSync({required String id, required String key, required String value, dynamic hint}) {
+    _jsSet('option:peer', jsonEncode({'id': id, 'name': key, 'value': value}));
     return true;
   }
-
-  Future<void> mainSetPeerAlias(
-      {required String id, required String alias, dynamic hint}) {
-    mainSetPeerOptionSync(id: id, key: 'alias', value: alias, hint: hint);
-    return Future.value();
+  Future<void> mainSetPeerOption({required String id, required String key, required String value, dynamic hint}) async {
+    mainSetPeerOptionSync(id: id, key: key, value: value);
   }
-
-  Future<String> mainGetNewStoredPeers({dynamic hint}) {
-    throw UnimplementedError();
+  Future<void> mainSetPeerAlias({required String id, required String alias, dynamic hint}) async {
+    _jsSet('option:peer', jsonEncode({'id': id, 'name': 'alias', 'value': alias}));
   }
-
-  Future<void> mainForgetPassword({required String id, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', ['forget']));
+  String mainGetPeerFlutterOptionSync({required String id, required String k, dynamic hint}) =>
+      _jsGet('option:flutter:peer', k);
+  void mainSetPeerFlutterOptionSync({required String id, required String k, required String v, dynamic hint}) {
+    _jsSet('option:flutter:peer', jsonEncode({'name': k, 'value': v}));
   }
-
-  Future<bool> mainPeerHasPassword({required String id, dynamic hint}) {
-    return Future(() =>
-        js.context.callMethod('getByName', ['peer_has_password', id]) ==
-        'true');
-  }
-
-  Future<bool> mainPeerExists({required String id, dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('getByName', ['peer_exists', id]));
-  }
-
-  Future<void> mainLoadRecentPeers({dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('getByName', ['load_recent_peers']));
-  }
-
-  String mainLoadRecentPeersSync({dynamic hint}) {
-    return js.context.callMethod('getByName', ['load_recent_peers_sync']);
-  }
-
-  String mainLoadLanPeersSync({dynamic hint}) {
-    return '{}';
-  }
-
-  Future<String> mainLoadRecentPeersForAb(
-      {required String filter, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainLoadFavPeers({dynamic hint}) {
-    return Future(() => js.context.callMethod('getByName', ['load_fav_peers']));
-  }
-
-  Future<void> mainLoadLanPeers({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainRemoveDiscovered({required String id, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainChangeTheme({required String dark, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainChangeLanguage({required String lang, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String mainVideoSaveDirectory({required bool root, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainSetUserDefaultOption(
-      {required String key, required String value, dynamic hint}) {
-    return js.context.callMethod('getByName', [
-      'option:user:default',
-      jsonEncode({'name': key, 'value': value})
-    ]);
-  }
-
-  String mainGetUserDefaultOption({required String key, dynamic hint}) {
-    return js.context.callMethod('getByName', ['option:user:default', key]);
-  }
-
-  Future<String> mainHandleRelayId({required String id, dynamic hint}) {
+  Future<String> mainHandleRelayId({required String id, dynamic hint}) async {
     var newId = id;
-    if (id.endsWith("\\r") || id.endsWith("/r")) {
-      newId = id.substring(0, id.length - 2);
-    }
-    return Future.value(newId);
-  }
-
-  String mainGetMainDisplay({dynamic hint}) {
-    return js.context.callMethod('getByName', ['main_display']);
-  }
-
-  String mainGetDisplays({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionAddPortForward(
-      {required UuidValue sessionId,
-      required int localPort,
-      required String remoteHost,
-      required int remotePort,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionRemovePortForward(
-      {required UuidValue sessionId, required int localPort, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionNewRdp({required UuidValue sessionId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionRequestVoiceCall(
-      {required UuidValue sessionId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionCloseVoiceCall(
-      {required UuidValue sessionId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> cmHandleIncomingVoiceCall(
-      {required int id, required bool accept, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> cmCloseVoiceCall({required int id, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainGetLastRemoteId({dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('getByName', ['option', 'last_remote_id']));
-  }
-
-  Future<String> mainGetSoftwareUpdateUrl({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainGetHomeDir({dynamic hint}) {
-    return Future.value('');
-  }
-
-  Future<String> mainGetLangs({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainGetTemporaryPassword({dynamic hint}) {
-    return Future.value('');
-  }
-
-  Future<String> mainGetPermanentPassword({dynamic hint}) {
-    return Future.value('');
-  }
-
-  Future<String> mainGetFingerprint({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> cmGetClientsState({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String?> cmCheckClientsLength({required int length, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<int> cmGetClientsLength({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainInit({required String appDir, dynamic hint}) {
-    return Future.value();
-  }
-
-  Future<void> mainDeviceId({required String id, dynamic hint}) {
-    // TODO: ?
-    throw UnimplementedError();
-  }
-
-  Future<void> mainDeviceName({required String name, dynamic hint}) {
-    // TODO: ?
-    throw UnimplementedError();
-  }
-
-  Future<void> mainRemovePeer({required String id, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', ['remove', id]));
-  }
-
-  bool mainHasHwcodec({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainHasVram({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String mainSupportedHwdecodings({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<bool> mainIsRoot({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  int getDoubleClickTime({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainStartDbusServer({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainSaveAb({required String json, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainClearAb({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainLoadAb({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainSaveGroup({required String json, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainClearGroup({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainLoadGroup({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionSendPointer(
-      {required UuidValue sessionId, required String msg, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionSendMouse(
-      {required UuidValue sessionId, required String msg, dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('setByName', ['send_mouse', msg]));
-  }
-
-  Future<void> sessionRestartRemoteDevice(
-      {required UuidValue sessionId, dynamic hint}) {
-    return Future(() => js.context.callMethod('setByName', ['restart']));
-  }
-
-  String sessionGetAuditServerSync(
-      {required UuidValue sessionId, required String typ, dynamic hint}) {
-    return js.context.callMethod('getByName', ['audit_server', typ]);
-  }
-
-  Future<void> sessionSendNote(
-      {required UuidValue sessionId, required String note, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> sessionAlternativeCodecs(
-      {required UuidValue sessionId, dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('getByName', ['alternative_codecs']));
-  }
-
-  Future<void> sessionChangePreferCodec(
-      {required UuidValue sessionId, dynamic hint}) {
-    return Future(
-        () => js.context.callMethod('setByName', ['change_prefer_codec']));
-  }
-
-  Future<void> sessionOnWaitingForImageDialogShow(
-      {required UuidValue sessionId, dynamic hint}) {
-    return Future.value();
-  }
-
-  Future<void> sessionToggleVirtualDisplay(
-      {required UuidValue sessionId,
-      required int index,
-      required bool on,
-      dynamic hint}) {
-    // TODO
-    throw UnimplementedError();
-  }
-
-  Future<void> mainSetHomeDir({required String home, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String mainGetDataDirIos({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainStopService({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainStartService({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainUpdateTemporaryPassword({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainSetPermanentPassword(
-      {required String password, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<bool> mainCheckSuperUserPermission({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainCheckMouseTime({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<double> mainGetMouseTime({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainWol({required String id, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainCreateShortcut({required String id, dynamic hint}) {
-    // TODO:
-    throw UnimplementedError();
-  }
-
-  Future<void> cmSendChat(
-      {required int connId, required String msg, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> cmLoginRes(
-      {required int connId, required bool res, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> cmCloseConnection({required int connId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> cmRemoveDisconnectedConnection(
-      {required int connId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> cmCheckClickTime({required int connId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<double> cmGetClickTime({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> cmSwitchPermission(
-      {required int connId,
-      required String name,
-      required bool enabled,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool cmCanElevate({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> cmElevatePortable({required int connId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> cmSwitchBack({required int connId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> cmGetConfig({required String name, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainGetBuildDate({dynamic hint}) {
-    // TODO
-    throw UnimplementedError();
-  }
-
-  String translate(
-      {required String name, required String locale, dynamic hint}) {
-    return js.context.callMethod('getByName', [
-      'translate',
-      jsonEncode({'locale': locale, 'text': name})
-    ]);
-  }
-
-  int sessionGetRgbaSize(
-      {required UuidValue sessionId, required int display, dynamic hint}) {
-    return 0;
-  }
-
-  void sessionNextRgba(
-      {required UuidValue sessionId, required int display, dynamic hint}) {}
-
-  void sessionRegisterPixelbufferTexture(
-      {required UuidValue sessionId,
-      required int display,
-      required int ptr,
-      dynamic hint}) {}
-
-  void sessionRegisterGpuTexture(
-      {required UuidValue sessionId,
-      required int display,
-      required int ptr,
-      dynamic hint}) {}
-
-  Future<void> queryOnlines({required List<String> ids, dynamic hint}) {
-    return Future(() =>
-        js.context.callMethod('setByName', ['query_onlines', jsonEncode(ids)]));
-  }
-
-  // Dup to the function in hbb_common, lib.rs
-  // Maybe we need to move this function to js part.
-  int versionToNumber({required String v, dynamic hint}) {
-    return int.tryParse(
-            js.context.callMethod('getByName', ['get_version_number', v])) ??
-        0;
-  }
-
-  Future<bool> optionSynced({dynamic hint}) {
-    return Future.value(true);
-  }
-
-  bool mainIsInstalled({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  void mainInitInputSource({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainIsInstalledLowerVersion({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainIsInstalledDaemon({required bool prompt, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainIsProcessTrusted({required bool prompt, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainIsCanScreenRecording({required bool prompt, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainIsCanInputMonitoring({required bool prompt, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainIsShareRdp({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainSetShareRdp({required bool enable, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainGotoInstall({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String mainGetNewVersion({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainUpdateMe({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> setCurSessionId({required UuidValue sessionId, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool installShowRunWithoutInstall({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> installRunWithoutInstall({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> installInstallMe(
-      {required String options, required String path, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String installInstallPath({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainAccountAuth(
-      {required String op, required bool rememberMe, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainAccountAuthCancel({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainAccountAuthResult({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainOnMainWindowClose({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainCurrentIsWayland({dynamic hint}) {
-    return false;
-  }
-
-  bool mainIsLoginWayland({dynamic hint}) {
-    return false;
-  }
-
-  bool mainHideDocker({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainHasFileClipboard({dynamic hint}) {
-    return false;
-  }
-
-  bool mainHasGpuTextureRender({dynamic hint}) {
-    return false;
-  }
-
-  Future<void> cmInit({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainStartIpcUrlServer({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainTestWallpaper({required int second, dynamic hint}) {
-    // TODO: implement mainTestWallpaper
-    return Future.value();
-  }
-
-  Future<bool> mainSupportRemoveWallpaper({dynamic hint}) {
-    // TODO: implement mainSupportRemoveWallpaper
-    return Future.value(false);
-  }
-
-  bool isIncomingOnly({dynamic hint}) {
-    return false;
-  }
-
-  bool isOutgoingOnly({dynamic hint}) {
-    return false;
-  }
-
-  bool isCustomClient({dynamic hint}) {
-    return false;
-  }
-
-  bool isDisableSettings({dynamic hint}) {
-    return false;
-  }
-
-  bool isDisableAb({dynamic hint}) {
-    return false;
-  }
-
-  bool isDisableGroupPanel({dynamic hint}) {
-    return false;
-  }
-
-  bool isDisableAccount({dynamic hint}) {
-    return false;
-  }
-
-  bool isDisableInstallation({dynamic hint}) {
-    return false;
-  }
-
-  Future<bool> isPresetPassword({dynamic hint}) {
-    return Future.value(false);
-  }
-
-  Future<void> sendUrlScheme({required String url, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> pluginEvent(
-      {required String id,
-      required String peer,
-      required Uint8List event,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Stream<EventToUI> pluginRegisterEventStream(
-      {required String id, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String? pluginGetSessionOption(
-      {required String id,
-      required String peer,
-      required String key,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> pluginSetSessionOption(
-      {required String id,
-      required String peer,
-      required String key,
-      required String value,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String? pluginGetSharedOption(
-      {required String id, required String key, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> pluginSetSharedOption(
-      {required String id,
-      required String key,
-      required String value,
-      dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> pluginReload({required String id, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  void pluginEnable({required String id, required bool v, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool pluginIsEnabled({required String id, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool pluginFeatureIsEnabled({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> pluginSyncUi({required String syncTo, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> pluginListReload({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> pluginInstall(
-      {required String id, required bool b, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool isSupportMultiUiSession({required String version, dynamic hint}) {
-    return versionToNumber(v: version) > versionToNumber(v: '1.2.4');
-  }
-
-  bool isSelinuxEnforcing({dynamic hint}) {
-    return false;
-  }
-
-  String mainDefaultPrivacyModeImpl({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String mainSupportedPrivacyModeImpls({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String mainSupportedInputSource({dynamic hint}) {
-    return jsonEncode([
-      ['Input source 2', 'input_source_2_tip']
-    ]);
-  }
-
-  Future<String> mainGenerate2Fa({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<bool> mainVerify2Fa({required String code, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainHasValid2FaSync({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  String mainGetHardOption({required String key, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> mainCheckHwcodec({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<void> sessionRequestNewDisplayInitMsgs(
-      {required UuidValue sessionId, required int display, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  Future<String> mainHandleWaylandScreencastRestoreToken(
-      {required String key, required String value, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainIsOptionFixed({required String key, dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  bool mainGetUseTextureRender({dynamic hint}) {
-    throw UnimplementedError();
-  }
-
-  void dispose() {}
+    if (id.endsWith("\r") || id.endsWith("/r")) newId = id.substring(0, id.length - 2);
+    return newId;
+  }
+  Future<String> mainGetLastRemoteId({dynamic hint}) async => _jsGet('option', 'last_remote_id');
+  Future<void> queryOnlines({required List<String> ids, dynamic hint}) async =>
+      _jsSet('query_onlines', jsonEncode(ids));
+
+  // ---------- ab / group cache ----------
+  Future<void> mainSaveAb({required String json, dynamic hint}) async {}
+  Future<void> mainClearAb({dynamic hint}) async {}
+  Future<String> mainLoadAb({dynamic hint}) async => '{}';
+  Future<void> mainSaveGroup({required String json, dynamic hint}) async {}
+  Future<void> mainClearGroup({dynamic hint}) async {}
+  Future<String> mainLoadGroup({dynamic hint}) async => '{}';
+  Future<String> mainLoadRecentPeersForAb({required String filter, dynamic hint}) async => '';
+  Future<String> mainGetNewStoredPeers({dynamic hint}) async => '';
+
+  // ---------- account auth (Web: 走纯前端 HTTP，见 user_model) ----------
+  Future<void> mainAccountAuth({required String op, required bool rememberMe, dynamic hint}) async {}
+  Future<void> mainAccountAuthCancel({dynamic hint}) async {}
+  Future<String> mainAccountAuthResult({dynamic hint}) async => '';
+
+  // ---------- translate ----------
+  String translate({required String name, required String locale, dynamic hint}) =>
+      _jsGet('translate', jsonEncode({'locale': locale, 'text': name}));
+
+  // ---------- session (真实对接 connection.ts) ----------
+  String sessionAddSync({
+    required UuidValue sessionId, required String id,
+    required bool isFileTransfer, required bool isPortForward, required bool isRdp,
+    required String switchUuid, required bool forceRelay,
+    required String password, required bool isSharedPassword, dynamic hint,
+  }) {
+    _jsSet('session_add_sync', jsonEncode({'id': id, 'password': password}));
+    return '';
+  }
+  Stream<EventToUI> sessionStart({required UuidValue sessionId, required String id, dynamic hint}) {
+    _jsSet('connect', id);
+    return const Stream.empty();
+  }
+  Stream<EventToUI> sessionStartWithDisplays({
+    required UuidValue sessionId, required String id, required Int32List displays, dynamic hint,
+  }) {
+    _jsSet('connect', id);
+    return const Stream.empty();
+  }
+  Future<void> sessionClose({required UuidValue sessionId, dynamic hint}) async => _jsSet('close');
+  Future<void> sessionReconnect({required UuidValue sessionId, required bool forceRelay, dynamic hint}) async => _jsSet('reconnect');
+  Future<void> sessionRefresh({required UuidValue sessionId, required int display, dynamic hint}) async => _jsSet('refresh');
+  Future<void> sessionLogin({
+    required UuidValue sessionId, required String osUsername, required String osPassword,
+    required String password, required bool remember, dynamic hint,
+  }) async {
+    _jsSet('login', jsonEncode({
+      'os_username': osUsername, 'os_password': osPassword,
+      'password': password, 'remember': remember,
+    }));
+  }
+  Future<void> sessionSend2Fa({required UuidValue sessionId, required String code, dynamic hint}) async =>
+      _jsSet('send_2fa', code);
+  Future<void> sessionInputKey({
+    required UuidValue sessionId, required String name, required bool down,
+    required bool press, required bool alt, required bool ctrl,
+    required bool shift, required bool command, dynamic hint,
+  }) async {
+    _jsSet('input_key', jsonEncode({
+      'name': name,
+      if (down) 'down': 'true',
+      if (press) 'press': 'true',
+      if (alt) 'alt': 'true',
+      if (ctrl) 'ctrl': 'true',
+      if (shift) 'shift': 'true',
+      if (command) 'command': 'true',
+    }));
+  }
+  Future<void> sessionInputString({required UuidValue sessionId, required String value, dynamic hint}) async =>
+      _jsSet('input_string', value);
+  Future<void> sessionSendMouse({required UuidValue sessionId, required String msg, dynamic hint}) async =>
+      _jsSet('send_mouse', msg);
+  Future<void> sessionInputOsPassword({required UuidValue sessionId, required String value, dynamic hint}) async =>
+      _jsSet('input_os_password', value);
+  Future<void> sessionSwitchDisplay({required bool isDesktop, required UuidValue sessionId, required Int32List value, dynamic hint}) async =>
+      _jsSet('switch_display', jsonEncode(value));
+  Future<void> sessionLockScreen({required UuidValue sessionId, dynamic hint}) async => _jsSet('lock_screen');
+  Future<void> sessionCtrlAltDel({required UuidValue sessionId, dynamic hint}) async => _jsSet('ctrl_alt_del');
+  Future<void> sessionRestartRemoteDevice({required UuidValue sessionId, dynamic hint}) async => _jsSet('restart');
+  Future<void> sessionSendNote({required UuidValue sessionId, required String note, dynamic hint}) async => _jsSet('send_note', note);
+  Future<String> sessionAlternativeCodecs({required UuidValue sessionId, dynamic hint}) async => _jsGet('alternative_codecs');
+  Future<void> sessionChangePreferCodec({required UuidValue sessionId, dynamic hint}) async => _jsSet('change_prefer_codec');
+  String sessionGetAuditServerSync({required UuidValue sessionId, required String typ, dynamic hint}) =>
+      _jsGet('audit_server', typ);
+  Future<void> sessionToggleOption({required UuidValue sessionId, required String value, dynamic hint}) async =>
+      _jsSet('toggle_option', value);
+  Future<void> sessionTogglePrivacyMode({required UuidValue sessionId, required String implKey, required bool on, dynamic hint}) async =>
+      _jsSet('toggle_option', jsonEncode({implKey, on}));
+  Future<bool?> sessionGetRemember({required UuidValue sessionId, dynamic hint}) async =>
+      _jsGet('remember') == 'true';
+  Future<bool?> sessionGetToggleOption({required UuidValue sessionId, required String arg, dynamic hint}) async =>
+      sessionGetToggleOptionSync(sessionId: sessionId, arg: arg);
+  bool sessionGetToggleOptionSync({required UuidValue sessionId, required String arg, dynamic hint}) =>
+      _jsGet('toggle_option', arg) == 'true';
+  Future<String?> sessionGetOption({required UuidValue sessionId, required String arg, dynamic hint}) async {
+    final v = _jsGet('option:session', arg);
+    return v.isEmpty ? null : v;
+  }
+  Future<void> sessionPeerOption({required UuidValue sessionId, required String name, required String value, dynamic hint}) async {
+    _jsSet('option:session', jsonEncode({'name': name, 'value': value}));
+  }
+  Future<String> sessionGetPeerOption({required UuidValue sessionId, required String name, dynamic hint}) async =>
+      _jsGet('option:session', name);
+  Future<String?> sessionGetFlutterOption({required UuidValue sessionId, required String k, dynamic hint}) async {
+    final v = _jsGet('option:flutter:peer', k);
+    return v.isEmpty ? null : v;
+  }
+  Future<void> sessionSetFlutterOption({required UuidValue sessionId, required String k, required String v, dynamic hint}) async {
+    _jsSet('option:flutter:peer', jsonEncode({'name': k, 'value': v}));
+  }
+  Future<String?> sessionGetViewStyle({required UuidValue sessionId, dynamic hint}) async {
+    final v = _jsGet('option:session', 'view_style');
+    return v.isEmpty ? null : v;
+  }
+  Future<void> sessionSetViewStyle({required UuidValue sessionId, required String value, dynamic hint}) async =>
+      _jsSet('option:session', jsonEncode({'name': 'view_style', 'value': value}));
+  Future<String?> sessionGetScrollStyle({required UuidValue sessionId, dynamic hint}) async {
+    final v = _jsGet('option:session', 'scroll_style');
+    return v.isEmpty ? null : v;
+  }
+  Future<void> sessionSetScrollStyle({required UuidValue sessionId, required String value, dynamic hint}) async =>
+      _jsSet('option:session', jsonEncode({'name': 'scroll_style', 'value': value}));
+  Future<String?> sessionGetImageQuality({required UuidValue sessionId, dynamic hint}) async {
+    final v = _jsGet('option:session', 'image_quality');
+    return v.isEmpty ? null : v;
+  }
+  Future<void> sessionSetImageQuality({required UuidValue sessionId, required String value, dynamic hint}) async =>
+      _jsSet('option:session', jsonEncode({'name': 'image_quality', 'value': value}));
+  Future<String?> sessionGetKeyboardMode({required UuidValue sessionId, dynamic hint}) async {
+    final v = _jsGet('option:session', 'keyboard_mode');
+    return v.isEmpty ? null : v;
+  }
+  Future<void> sessionSetKeyboardMode({required UuidValue sessionId, required String value, dynamic hint}) async =>
+      _jsSet('option:session', jsonEncode({'name': 'keyboard_mode', 'value': value}));
+  String? sessionGetReverseMouseWheelSync({required UuidValue sessionId, dynamic hint}) =>
+      _jsGet('option:session', 'reverse_mouse_wheel');
+  Future<void> sessionSetReverseMouseWheel({required UuidValue sessionId, required String value, dynamic hint}) async =>
+      _jsSet('option:session', jsonEncode({'name': 'reverse_mouse_wheel', 'value': value}));
+  String? sessionGetDisplaysAsIndividualWindows({required UuidValue sessionId, dynamic hint}) =>
+      _jsGet('option:session', 'displays_as_individual_windows');
+  Future<void> sessionSetDisplaysAsIndividualWindows({required UuidValue sessionId, required String value, dynamic hint}) async {}
+  String? sessionGetUseAllMyDisplaysForTheRemoteSession({required UuidValue sessionId, dynamic hint}) => '';
+  Future<void> sessionSetUseAllMyDisplaysForTheRemoteSession({required UuidValue sessionId, required String value, dynamic hint}) async {}
+  Future<Int32List?> sessionGetCustomImageQuality({required UuidValue sessionId, dynamic hint}) async {
+    try {
+      final v = _jsGet('option:session', 'custom_image_quality');
+      if (v.isEmpty) return null;
+      return Int32List.fromList([int.parse(v)]);
+    } catch (_) { return null; }
+  }
+  Future<void> sessionSetCustomImageQuality({required UuidValue sessionId, required int value, dynamic hint}) async =>
+      _jsSet('option:session', jsonEncode({'name': 'custom_image_quality', 'value': value}));
+  Future<void> sessionSetCustomFps({required UuidValue sessionId, required int fps, dynamic hint}) async =>
+      _jsSet('option:session', jsonEncode({'name': 'custom_fps', 'value': fps}));
+  bool sessionIsKeyboardModeSupported({required UuidValue sessionId, required String mode, dynamic hint}) =>
+      mode == kKeyLegacyMode;
+  bool sessionIsMultiUiSession({required UuidValue sessionId, dynamic hint}) => false;
+  Future<void> sessionSetSize({required UuidValue sessionId, required int display, required int width, required int height, dynamic hint}) async {}
+  Future<void> sessionOnWaitingForImageDialogShow({required UuidValue sessionId, dynamic hint}) async {}
+  Future<void> sessionRequestNewDisplayInitMsgs({required UuidValue sessionId, required int display, dynamic hint}) async {}
+  int sessionGetRgbaSize({required UuidValue sessionId, required int display, dynamic hint}) => 0;
+  void sessionNextRgba({required UuidValue sessionId, required int display, dynamic hint}) {}
+  void sessionRegisterPixelbufferTexture({required UuidValue sessionId, required int display, required int ptr, dynamic hint}) {}
+  void sessionRegisterGpuTexture({required UuidValue sessionId, required int display, required int ptr, dynamic hint}) {}
+  int getNextTextureKey({dynamic hint}) => 0;
+
+  // ---------- clipboard / misc ----------
+  bool mainHasFileClipboard({dynamic hint}) => false;
+  bool mainHasGpuTextureRender({dynamic hint}) => false;
+  bool mainHasHwcodec({dynamic hint}) => false;
+  bool mainHasVram({dynamic hint}) => false;
+  String mainSupportedHwdecodings({dynamic hint}) => '';
+  bool mainGetUseTextureRender({dynamic hint}) => false;
+  Future<void> mainCheckHwcodec({dynamic hint}) async {}
+  int getDoubleClickTime({dynamic hint}) => 500;
+  Future<void> mainCheckMouseTime({dynamic hint}) async {}
+  Future<double> mainGetMouseTime({dynamic hint}) async => 0;
+  String mainGetInputSource({dynamic hint}) => 'Input source 2';
+  Future<void> mainSetInputSource({required UuidValue sessionId, required String value, dynamic hint}) async {}
+  void mainInitInputSource({dynamic hint}) {}
+  String mainSupportedInputSource({dynamic hint}) => jsonEncode([['Input source 2', 'input_source_2_tip']]);
+  String mainGetHardOption({required String key, dynamic hint}) => '';
+  String mainGetEnv({required String key, dynamic hint}) => '';
+  Future<String> mainGetHomeDir({dynamic hint}) async => '';
+  Future<void> mainSetHomeDir({required String home, dynamic hint}) async {}
+  String mainGetDataDirIos({dynamic hint}) => '';
+  Future<String> mainGetSoftwareUpdateUrl({dynamic hint}) async => '';
+  Future<String> mainGetBuildDate({dynamic hint}) async => '';
+  String mainGetNewVersion({dynamic hint}) => '';
+  bool mainUpdateMe({dynamic hint}) => false;
+  bool mainGotoInstall({dynamic hint}) => false;
+  bool mainIsInstalled({dynamic hint}) => false;
+  bool mainIsInstalledLowerVersion({dynamic hint}) => false;
+  bool mainIsInstalledDaemon({required bool prompt, dynamic hint}) => false;
+  bool mainIsProcessTrusted({required bool prompt, dynamic hint}) => true;
+  bool mainIsCanScreenRecording({required bool prompt, dynamic hint}) => true;
+  bool mainIsCanInputMonitoring({required bool prompt, dynamic hint}) => true;
+  bool mainIsShareRdp({dynamic hint}) => false;
+  Future<void> mainSetShareRdp({required bool enable, dynamic hint}) async {}
+  Future<bool> mainIsRoot({dynamic hint}) async => false;
+  Future<bool> mainCheckSuperUserPermission({dynamic hint}) async => true;
+  Future<void> mainStopService({dynamic hint}) async {}
+  Future<void> mainStartService({dynamic hint}) async {}
+  Future<void> mainUpdateTemporaryPassword({dynamic hint}) async {}
+  Future<void> mainSetPermanentPassword({required String password, dynamic hint}) async {}
+  Future<String> mainGetTemporaryPassword({dynamic hint}) async => '';
+  Future<String> mainGetPermanentPassword({dynamic hint}) async => '';
+  Future<String> mainGetFingerprint({dynamic hint}) async => '';
+  bool mainCurrentIsWayland({dynamic hint}) => false;
+  bool mainIsLoginWayland({dynamic hint}) => false;
+  bool mainHideDocker({dynamic hint}) => false;
+  Future<void> mainWol({required String id, dynamic hint}) async {}
+  Future<void> mainCreateShortcut({required String id, dynamic hint}) async {}
+  Future<void> sendUrlScheme({required String url, dynamic hint}) async {}
+  Future<String> mainGetAppName({dynamic hint}) async => 'RustDesk';
+  String mainGetAppNameSync({dynamic hint}) => 'RustDesk';
+  String mainUriPrefixSync({dynamic hint}) => 'rustdesk://';
+  Future<String> mainGetLicense({dynamic hint}) async => '';
+  Future<String> mainGetLangs({dynamic hint}) async => '';
+  Future<String> mainGetSoundInputs({dynamic hint}) async => '[]';
+  Future<String?> mainGetDefaultSoundInput({dynamic hint}) async => null;
+  Future<void> mainSetSocks({required String proxy, required String username, required String password, dynamic hint}) async {}
+  Future<List<String>> mainGetSocks({dynamic hint}) async => [];
+  Future<bool> mainGetProxyStatus({dynamic hint}) async => false;
+  Future<void> mainPostRequest({required String url, required String body, required String header, dynamic hint}) async {}
+  Future<void> mainHttpRequest({required String url, required String method, String? body, required String header, dynamic hint}) async {}
+  Future<String?> mainGetHttpStatus({required String url, dynamic hint}) async => null;
+  Future<String> mainGenerate2Fa({dynamic hint}) async => '';
+  Future<bool> mainVerify2Fa({required String code, dynamic hint}) async => false;
+  bool mainHasValid2FaSync({dynamic hint}) => false;
+  String mainDefaultPrivacyModeImpl({dynamic hint}) => '';
+  String mainSupportedPrivacyModeImpls({dynamic hint}) => '[]';
+  String mainGetMainDisplay({dynamic hint}) => _jsGet('main_display');
+  String mainGetDisplays({dynamic hint}) => '';
+  String mainGetNewStoredPeersSync({dynamic hint}) => '';
+  bool isPresetPassword({dynamic hint}) => false;
+  bool isSelinuxEnforcing({dynamic hint}) => false;
+  bool isIncomingOnly({dynamic hint}) => false;
+  bool isOutgoingOnly({dynamic hint}) => false;
+  bool isCustomClient({dynamic hint}) => false;
+  bool isDisableSettings({dynamic hint}) => false;
+  bool isDisableAb({dynamic hint}) => false;
+  bool isDisableGroupPanel({dynamic hint}) => false;
+  bool isDisableAccount({dynamic hint}) => false;
+  bool isDisableInstallation({dynamic hint}) => false;
+  bool isSupportMultiUiSession({required String version, dynamic hint}) => false;
+  Future<void> mainTestWallpaper({required int second, dynamic hint}) async {}
+  Future<bool> mainSupportRemoveWallpaper({dynamic hint}) async => false;
+  Future<String> mainHandleWaylandScreencastRestoreToken({required String key, required String value, dynamic hint}) async => '';
+
+  // ---------- file transfer / port forward / rdp（Web 暂不支持，安全空实现） ----------
+  Future<void> sessionReadRemoteDir({required UuidValue sessionId, required String path, required bool includeHidden, dynamic hint}) async {}
+  Future<void> sessionSendFiles({required UuidValue sessionId, required int actId, required String path, required String to, required int fileNum, required bool includeHidden, required bool isRemote, dynamic hint}) async {}
+  Future<void> sessionSetConfirmOverrideFile({required UuidValue sessionId, required int actId, required int fileNum, required bool needOverride, required bool remember, required bool isUpload, dynamic hint}) async {}
+  Future<void> sessionRemoveFile({required UuidValue sessionId, required int actId, required String path, required int fileNum, required bool isRemote, dynamic hint}) async {}
+  Future<void> sessionReadDirRecursive({required UuidValue sessionId, required int actId, required String path, required bool isRemote, required bool showHidden, dynamic hint}) async {}
+  Future<void> sessionRemoveAllEmptyDirs({required UuidValue sessionId, required int actId, required String path, required bool isRemote, dynamic hint}) async {}
+  Future<void> sessionCancelJob({required UuidValue sessionId, required int actId, dynamic hint}) async {}
+  Future<void> sessionCreateDir({required UuidValue sessionId, required int actId, required String path, required bool isRemote, dynamic hint}) async {}
+  Future<String> sessionReadLocalDirSync({required UuidValue sessionId, required String path, required bool showHidden, dynamic hint}) async => '';
+  Future<String> sessionGetPlatform({required UuidValue sessionId, required bool isRemote, dynamic hint}) async => '';
+  Future<void> sessionLoadLastTransferJobs({required UuidValue sessionId, dynamic hint}) async {}
+  Future<void> sessionAddJob({required UuidValue sessionId, required int actId, required String path, required String to, required int fileNum, required bool includeHidden, required bool isRemote, dynamic hint}) async {}
+  Future<void> sessionResumeJob({required UuidValue sessionId, required int actId, required bool isRemote, dynamic hint}) async {}
+  Future<void> sessionAddPortForward({required UuidValue sessionId, required int localPort, required String remoteHost, required int remotePort, dynamic hint}) async {}
+  Future<void> sessionRemovePortForward({required UuidValue sessionId, required int localPort, dynamic hint}) async {}
+  Future<void> sessionNewRdp({required UuidValue sessionId, dynamic hint}) async {}
+  Future<void> sessionRequestVoiceCall({required UuidValue sessionId, dynamic hint}) async {}
+  Future<void> sessionCloseVoiceCall({required UuidValue sessionId, dynamic hint}) async {}
+  Future<void> cmHandleIncomingVoiceCall({required int id, required bool accept, dynamic hint}) async {}
+  Future<void> cmCloseVoiceCall({required int id, dynamic hint}) async {}
+  Future<void> sessionElevateDirect({required UuidValue sessionId, dynamic hint}) async {}
+  Future<void> sessionElevateWithLogon({required UuidValue sessionId, required String username, required String password, dynamic hint}) async {}
+  Future<void> sessionSwitchSides({required UuidValue sessionId, dynamic hint}) async {}
+  Future<void> sessionChangeResolution({required UuidValue sessionId, required int display, required int width, required int height, dynamic hint}) async {}
+  Future<void> sessionSendSelectedSessionId({required UuidValue sessionId, required String sid, dynamic hint}) async {}
+  Future<void> sessionHandleFlutterKeyEvent({required UuidValue sessionId, required String name, required int platformCode, required int positionCode, required int lockModes, required bool downOrUp, dynamic hint}) async {}
+  void sessionEnterOrLeave({required UuidValue sessionId, required bool enter, dynamic hint}) {}
+  Future<void> sessionSendChat({required UuidValue sessionId, required String text, dynamic hint}) async {}
+  Future<void> sessionPeerOption({required UuidValue sessionId, required String name, required String value, dynamic hint}) async {}
+  Future<void> setCurSessionId({required UuidValue sessionId, dynamic hint}) async {}
+  Future<void> sessionToggleVirtualDisplay({required UuidValue sessionId, required int index, required bool on, dynamic hint}) async {}
+  Future<void> sessionRecordScreen({required UuidValue sessionId, required bool start, required int display, required int width, required int height, dynamic hint}) async {}
+  Future<void> sessionRecordStatus({required UuidValue sessionId, required bool status, dynamic hint}) async {}
+
+  // ---------- cm (connection manager) ----------
+  Future<String> cmGetClientsState({dynamic hint}) async => '[]';
+  Future<String?> cmCheckClientsLength({required int length, dynamic hint}) async => null;
+  Future<int> cmGetClientsLength({dynamic hint}) async => 0;
+  Future<void> cmSendChat({required int connId, required String msg, dynamic hint}) async {}
+  Future<void> cmLoginRes({required int connId, required bool res, dynamic hint}) async {}
+  Future<void> cmCloseConnection({required int connId, dynamic hint}) async {}
+  Future<void> cmRemoveDisconnectedConnection({required int connId, dynamic hint}) async {}
+  Future<void> cmCheckClickTime({required int connId, dynamic hint}) async {}
+  Future<double> cmGetClickTime({dynamic hint}) async => 0;
+  Future<void> cmSwitchPermission({required int connId, required String name, required bool enabled, dynamic hint}) async {}
+  bool cmCanElevate({dynamic hint}) => false;
+  Future<void> cmElevatePortable({required int connId, dynamic hint}) async {}
+  Future<void> cmSwitchBack({required int connId, dynamic hint}) async {}
+  Future<String> cmGetConfig({required String name, dynamic hint}) async => '';
+  Future<void> cmInit({dynamic hint}) async {}
+
+  // ---------- install / plugin ----------
+  bool installShowRunWithoutInstall({dynamic hint}) => false;
+  Future<void> installRunWithoutInstall({dynamic hint}) async {}
+  Future<void> installInstallMe({required String options, required String path, dynamic hint}) async {}
+  String installInstallPath({dynamic hint}) => '';
+  Future<void> pluginEvent({required String id, required String peer, required Uint8List event, dynamic hint}) async {}
+  Stream<EventToUI> pluginRegisterEventStream({required String id, dynamic hint}) => const Stream.empty();
+  String? pluginGetSessionOption({required String id, required String peer, required String key, dynamic hint}) => null;
+  Future<void> pluginSetSessionOption({required String id, required String peer, required String key, required String value, dynamic hint}) async {}
+  String? pluginGetSharedOption({required String id, required String key, dynamic hint}) => null;
+  Future<void> pluginSetSharedOption({required String id, required String key, required String value, dynamic hint}) async {}
+  Future<void> pluginReload({required String id, dynamic hint}) async {}
+  void pluginEnable({required String id, required bool v, dynamic hint}) {}
+  bool pluginIsEnabled({required String id, dynamic hint}) => false;
+  bool pluginFeatureIsEnabled({dynamic hint}) => false;
+  Future<void> pluginSyncUi({required String syncTo, dynamic hint}) async {}
+  Future<void> pluginListReload({dynamic hint}) async {}
+  Future<void> pluginInstall({required String id, required bool b, dynamic hint}) async {}
+  Future<void> mainStartIpcUrlServer2({dynamic hint}) async {}
+  Future<void> mainOnMainWindowClose2({dynamic hint}) async {}
 }

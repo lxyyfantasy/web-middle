@@ -3098,17 +3098,13 @@ Future<bool> setServerConfig(
   if (config.idServer.isNotEmpty && errMsgs != null) {
     errMsgs[0].value = translate(await bind.mainTestIfValidServer(
         server: config.idServer, testWithProxy: true));
-    if (errMsgs[0].isNotEmpty) {
-      return false;
-    }
+    if (errMsgs[0].isNotEmpty) return false;
   }
   // relay
   if (config.relayServer.isNotEmpty && errMsgs != null) {
     errMsgs[1].value = translate(await bind.mainTestIfValidServer(
         server: config.relayServer, testWithProxy: true));
-    if (errMsgs[1].isNotEmpty) {
-      return false;
-    }
+    if (errMsgs[1].isNotEmpty) return false;
   }
   // api
   if (config.apiServer.isNotEmpty && errMsgs != null) {
@@ -3121,16 +3117,12 @@ Future<bool> setServerConfig(
   }
   final oldApiServer = await bind.mainGetApiServer();
 
-  // should set one by one
-  await bind.mainSetOption(
-      key: 'custom-rendezvous-server', value: config.idServer);
+  await bind.mainSetOption(key: 'custom-rendezvous-server', value: config.idServer);
   await bind.mainSetOption(key: 'relay-server', value: config.relayServer);
   await bind.mainSetOption(key: 'api-server', value: config.apiServer);
   await bind.mainSetOption(key: 'key', value: config.key);
   final newApiServer = await bind.mainGetApiServer();
-  if (oldApiServer.isNotEmpty &&
-      oldApiServer != newApiServer &&
-      gFFI.userModel.isLogin) {
+  if (oldApiServer.isNotEmpty && oldApiServer != newApiServer && gFFI.userModel.isLogin) {
     gFFI.userModel.logOut(apiServer: oldApiServer);
   }
   return true;
